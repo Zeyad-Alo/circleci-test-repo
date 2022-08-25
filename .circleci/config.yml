@@ -12,19 +12,19 @@ jobs:
     docker:
       - image: circleci/node:13.8.0
     steps:
-      - run: echo "Hello world" > output.txt
+      - run: echo "Hello world" > ~/output.txt
       - persist_to_workspace:
-          root: /home/circleci/project
+          root: ~/
           paths:
-            - build/*
+            - output.txt
 
   print-hello-world:
     docker:
       - image: circleci/node:13.8.0
     steps:
       - attach_workspace:
-          at: /home/circleci/project
-      - run: cat output.txt
+          at: ~/
+      - run: cat ~/output.txt
 
 workflows:
   # Name the workflow "welcome"
