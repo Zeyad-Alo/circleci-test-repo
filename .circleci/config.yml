@@ -19,9 +19,18 @@ jobs:
       - print-pipeline-id:
           id: << pipeline.id >>
 
+  return-error:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - run: return 1
+      - run:
+          command: echo "Hello error"
+          when: on_fail
+
 workflows:
   # Name the workflow "welcome"
   hello-world:
     # Run the welcome/run job in its own container
     jobs:
-      - print-pipeline
+      - return-error
