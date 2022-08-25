@@ -8,31 +8,29 @@ orbs:
 
 jobs:
 
-  print-hello:
+  save-hello-world:
     docker:
       - image: circleci/node:13.8.0
     steps:
-      - run: echo Hello
+      - run: echo "Hello world" > output.txt
+      - persist_to_workspace:
+          root: /tmp/workspace
+          paths:
+            - build/*
 
-  print-world:
+  print-hello-world:
     docker:
       - image: circleci/node:13.8.0
     steps:
-      - run: echo World
-
-  print-name:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - run: echo $NAME
+      - attach_workspace:
+          at: /tmp/workspace
+      - run: cat output.txt
 
 workflows:
   # Name the workflow "welcome"
-  print-hello-world:
+  hello-world:
     # Run the welcome/run job in its own container
     jobs:
-      - print-hello
-      - print-world:
-          requires: [print-hello]
-      - print-name:
-          requires: [print-world]
+      - save-hello-world
+      - print-hello-world:
+          requires: [save-hello-world]
