@@ -24,6 +24,7 @@ jobs:
                 --template-file template.yml \
                 --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
                 --region us-east-1
+              aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Project,Values=udacity" --output text >> inventory
 
   configure_infrastructure: 
       docker:
@@ -37,10 +38,10 @@ jobs:
             name: Install Ansible
             command: |
               apk add --update ansible
-        - run:
-            name: Get instance ip and set it in inventory
-            command: |
-              aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Project,Values=udacity" --output text >> inventory
+        # - run:
+        #     name: Get instance ip and set it in inventory
+        #     command: |
+        #       aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Project,Values=udacity" --output text >> inventory
         - run:
             name: Run Playbook and Configure server
             command: |
