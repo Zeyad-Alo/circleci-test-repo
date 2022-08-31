@@ -44,7 +44,7 @@ jobs:
         - run:
             name: Run Playbook and Configure server
             command: |
-              ansible-playbook main.yml -i inventory --private-key ~/EC2_Key_3.pem
+              ansible-playbook main.yml -i inventory --private-key EC2_Key_3.pem
 
 workflows:
   # Name the workflow "welcome"
