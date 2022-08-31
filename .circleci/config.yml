@@ -12,25 +12,22 @@ commands:
 
 jobs:
 
-  print-pipeline:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - print-pipeline-id:
-          id: << pipeline.id >>
-
-  return-error:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - run: return 1
-      - run:
-          command: echo "Hello error"
-          when: on_fail
+  create_infrastructure: 
+      docker:
+        - image: amazon/aws-cli
+      steps:
+        - checkout
+        - run:
+            name: Create Cloudformation Stack
+            command: |
+              aws cloudformation deploy \
+                --template-file template.yml \
+                --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
+                --region us-east-1
 
 workflows:
   # Name the workflow "welcome"
   hello-world:
     # Run the welcome/run job in its own container
     jobs:
-      - print-pipeline
+      - create_infrastructure
