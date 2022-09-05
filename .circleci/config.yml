@@ -46,10 +46,28 @@ jobs:
             command: |
               ansible-playbook main.yml -i inventory --private-key EC2_Key_3.pem
 
+  smoke_test:
+    docker:
+      - image: alpine:latest
+    steps:
+      - run: apt add --update curl
+      - run:
+          name: smoke test
+          command: |
+            URL="https://blog.udacity.com/"
+            # Test if website exists
+            if curl -s --head ${URL} 
+            then
+              return 0
+            else
+              return 1
+            fi
+
 workflows:
   # Name the workflow "welcome"
   test-repo:
     # Run the welcome/run job in its own container
     jobs:
       # - create_infrastructure
-      - configure_infrastructure
+      # - configure_infrastructure
+      - smoke_test
